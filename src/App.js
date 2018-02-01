@@ -75,13 +75,23 @@ export default class App extends Component {
 
   onDrop = (files) => {
 
+    this.setState({
+      statusCode: "",
+    });
     // first get the pre-signed URL
     axios.get(ApiGatewayUrl, {headers: {Authorization: this.state.accessToken}}).then((response) => {
 
       // now do a PUT request to the pre-signed URL
-      axios.put(response.data, files[0]).then((response) => {
+      axios.put(response.data, files[0])
+      .then(response => {
         this.setState({
           statusCode: response.status,
+          });
+      })
+      .catch(error => {
+          console.log(error)
+          this.setState({
+              statusCode: error.response.status,
         });
       });
     });
